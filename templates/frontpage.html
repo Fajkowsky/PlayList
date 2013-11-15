@@ -9,14 +9,14 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">Play Lista </a>
+          <a class="navbar-brand" href="{% url 'index' %}">Play Lista </a>
         </div>
         <div class="navbar-collapse collapse">
-          <form class="navbar-form navbar-right">
-            <button type="submit" class="btn btn-primary">Twoje piosenki</button>
-            <button type="submit" class="btn btn-primary">Dodaj piosenkę</button>
-            <button type="submit" class="btn btn-danger">Wyloguj</button>
-          </form>
+          <div class="navbar-form navbar-right">
+            <a href="{% url 'mysong' %}"><button type="submit" class="btn btn-primary">Twoje piosenki</button></a>
+            <a href="{% url 'addsong' %}"><button type="submit" class="btn btn-primary">Dodaj piosenkę</button></a>
+            <a href="{% url 'logouting' %}"><button type="submit" class="btn btn-danger">Wyloguj</button></a>
+          </div>
         </div><!--/.navbar-collapse -->
       </div>
     </div>
@@ -41,13 +41,14 @@
             <th>Play</th>
         </thead>
         <tbody>
+            {% for song in songs%}
             <tr>
-                <td>Micel Jacson</td>
-                <td>Black or White Black or White</td>
-                <td><button type="submit" class="btn btn-success">4</button></td>
-                <td><button type="submit" class="btn btn-danger">6</button> </td>
-                <td>-2</td>
-                <td>Szybkie</td>
+                <td>{{song.artist}}</td>
+                <td>{{song.song_name}}</td>
+                <td><button type="submit" class="btn btn-success">{{song.score_plus}}</button></td>
+                <td><button type="submit" class="btn btn-danger">{{song.score_minus}}</button> </td>
+                <td>{{song.score}}</td>
+                <td>{{song.song_type}}</td>
                 <td>
                     <audio controls>
                         <source src="#" type="audio/mpeg">
@@ -55,6 +56,7 @@
                     </audio>
                 </td>
             </tr>
+            {% endfor %}
         </tbody>
     </table>
 </div>

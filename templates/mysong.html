@@ -12,11 +12,11 @@
           <a class="navbar-brand" href="#">Play Lista </a>
         </div>
         <div class="navbar-collapse collapse">
-          <form class="navbar-form navbar-right">
-            <button type="submit" class="btn btn-primary">Wszystkie piosenki</button>
-            <button type="submit" class="btn btn-primary">Dodaj piosenkę</button>
-            <button type="submit" class="btn btn-danger">Wyloguj</button>
-          </form>
+          <div class="navbar-form navbar-right">
+            <a href="{% url 'frontpage' %}"><button type="submit" class="btn btn-primary">Wszystkie piosenki</button></a>
+            <a href="{% url 'addsong' %}"><button type="submit" class="btn btn-primary">Dodaj piosenkę</button></a>
+            <a href="{% url 'logouting' %}"><button type="submit" class="btn btn-danger">Wyloguj</button></a>
+          </div>
         </div><!--/.navbar-collapse -->
       </div>
     </div>
@@ -27,5 +27,39 @@
   <div class="container text-center">
     <h3>Poniżej możesz przegladać i na dodane przez siebie piosenki !</h3>
   </div>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="col-md-12"> 
+    <table class="table table-hover ">
+        <thead>
+            <th>Wykonawca</th>
+            <th>Tytuł</th>
+            <th>Plusy</th>
+            <th>Minusy</th>
+            <th>Bilans</th>
+            <th>Rodzaj</th>
+            <th>Play</th>
+        </thead>
+        <tbody>
+            {% for song in songs %}
+            <tr>
+                <td>{{song.artist}}</td>
+                <td>{{song.song_name}}</td>
+                <td>{{song.score_plus}}</td>
+                <td>{{song.score_minus}}</td>
+                <td>{{song.score}}</td>
+                <td>{{song.song_type}}</td>
+                <td>
+                    <audio controls>
+                        <source src="#" type="audio/mpeg">
+                        Your browser does not support the audio element.
+                    </audio>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 </div>
 {% endblock %}

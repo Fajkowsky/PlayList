@@ -2,6 +2,7 @@
 from django import forms
 from django.forms import ModelForm
 from django.contrib.auth.models import User
+from models import Song
 
 
 class LoginForm(forms.Form):
@@ -29,3 +30,13 @@ class RegisterForm(ModelForm):
         if commit:
             user.save()
         return user
+
+class SongForm(ModelForm):
+
+    class Meta:
+        model = Song
+        fields = ['artist', 'song_name', 'song_type']
+        widgets = {
+            'artist': forms.TextInput(attrs={'id': 'artist', 'type': 'text', 'class': 'form-control', 'placeholder': 'wykonawca'}),
+            'song_name': forms.TextInput(attrs={'id': 'songname', 'type': 'text', 'class': 'form-control', 'placeholder': 'tytuł piosenki'}),
+        }

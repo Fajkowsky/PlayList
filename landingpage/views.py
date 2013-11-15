@@ -4,7 +4,8 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.forms.util import ErrorList
 
-from forms import LoginForm, RegisterForm
+from forms import LoginForm, RegisterForm, SongForm
+from models import Song
 
 
 def index(request):
@@ -45,14 +46,24 @@ def logouting(request):
 
 def frontpage(request):
     if request.user.is_authenticated():
-        return render(request, "frontpage.html")
-
+        return render(request, "frontpage.html", {'songs': Song.objects.all()})
+    else:
+        return redirect('index')
 
 def addsong(request):
     if request.user.is_authenticated():
-        return render(request, "addsong.html")
+        if request.method == 'POST':
+            form = SongForm(request.POST)
+            if form.is_valid():
+                song = form.save(commit=False)
+                song.user = request.user
+                song.save()
+                return redirect('frontpage')
+        else:
+            form = SongForm()
+        return render(request, "addsong.html", {'form': form})
 
 
 def mysong(request):
     if request.user.is_authenticated():
-        return render(request, "mysong.html")
+        return render(request, "mysong.html", {'songs': Song.objects.filter(user=request.user)})
