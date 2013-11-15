@@ -12,12 +12,12 @@
       <a class="navbar-brand" href="#">Play Lista </a>
     </div>
     <div class="navbar-collapse collapse">
-      <form class="navbar-form navbar-right">
+      <form class="navbar-form navbar-right" method="post">
         <div class="form-group">
-          <input type="text" placeholder="login" class="form-control">
+          {{form.username}}
         </div>
         <div class="form-group">
-          <input type="password" placeholder="hasło" class="form-control">
+          {{form.password}}
         </div>
         <button type="submit" class="btn btn-primary">Zaloguj</button>
       </form>
@@ -30,6 +30,6 @@
 <div class="container text-center">
     <h3>Aby korzystać ze strony proszę się zalogować :)</h3>
     <h3>Jeżeli nie masz jeszcze konta zarejestruj się ! </h3>
-    <button type="submit" class="btn btn-info">Rejestracja</button>
+    <a href="{% url 'register' %}"><button type="submit" class="btn btn-info">Rejestracja</button></a>
 </div>
 {% endblock %}
