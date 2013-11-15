@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block menu %} 
+<div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">Play Lista </a>
+        </div>
+        <div class="navbar-collapse collapse">
+          <form class="navbar-form navbar-right">
+            <button type="submit" class="btn btn-primary">Wszystkie piosenki</button>
+            <button type="submit" class="btn btn-primary">Dodaj piosenkę</button>
+            <button type="submit" class="btn btn-danger">Wyloguj</button>
+          </form>
+        </div><!--/.navbar-collapse -->
+      </div>
+    </div>
+{% endblock %}
+
+{% block jumbotron %} 
+<div class="container text-center">
+  <div class="container text-center">
+    <h3>Poniżej możesz przegladać i na dodane przez siebie piosenki !</h3>
+  </div>
+</div>
+{% endblock %}
