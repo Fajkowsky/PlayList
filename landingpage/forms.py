@@ -8,7 +8,7 @@ class LoginForm(forms.Form):
     username = forms.CharField(required=True, widget=forms.TextInput(
         attrs={'class': 'form-control', 'placeholder': 'nazwa użytkownika'}))
     password = forms.CharField(required=True, widget=forms.TextInput(
-        attrs={'class': 'form-control', 'placeholder': 'hasło'}))
+        attrs={'class': 'form-control', 'placeholder': 'hasło', 'type': 'password',}))
 
 
 class RegisterForm(ModelForm):
