@@ -3,9 +3,10 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.forms.util import ErrorList
+from django.db.models import F
 
 from forms import LoginForm, RegisterForm, SongForm
-from models import Song
+from models import Song, SongVoted
 
 
 def index(request):
@@ -15,7 +16,6 @@ def index(request):
             cd = form.cleaned_data
             user = authenticate(
                 username=cd['username'], password=cd['password'])
-            print user
             if user is not None:
                 login(request, user)
                 return redirect('frontpage')
@@ -24,7 +24,6 @@ def index(request):
                     [u"nie ma takiego użytkownika"])
     else:
         form = LoginForm()
-    print request.user
     return render(request, "index.html", {'form': form, 'user': request.user})
 
 
@@ -44,11 +43,17 @@ def logouting(request):
     return redirect('index')
 
 
-def frontpage(request):
+def frontpage(request, data={'voted': True}):
     if request.user.is_authenticated():
-        return render(request, "frontpage.html", {'songs': Song.objects.all()})
+        if request.method == 'POST':
+            form = request.POST.dict()
+            data['voted'] = votesong(request.user.id,
+                                     form['song_id'], form['vote'])
+        data['songs'] = Song.objects.all()
+        return render(request, "frontpage.html", data)
     else:
         return redirect('index')
+
 
 def addsong(request):
     if request.user.is_authenticated():
@@ -67,3 +72,19 @@ def addsong(request):
 def mysong(request):
     if request.user.is_authenticated():
         return render(request, "mysong.html", {'songs': Song.objects.filter(user=request.user)})
+
+
+def votesong(user_id, song_id, vote):
+    song = Song.objects.get(id=song_id)
+    user = User.objects.get(id=user_id)
+    if not SongVoted.objects.filter(user=user, song=song):
+        if vote == 'plus':
+            song.score_plus += 1
+            song.save()
+        elif vote == 'minus':
+            song.score_minus += 1
+            song.save()
+        SongVoted(user=user, song=song).save()
+        return True
+    else:
+        return False

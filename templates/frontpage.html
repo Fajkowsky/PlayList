@@ -25,6 +25,10 @@
 {% block jumbotron %} 
 <div class="container text-center">
     <h3>Poniżej możesz przegladać i głosować na już dodane piosenki !</h3>
+    {% if not voted %}
+    <h3>Zagłosowałeś już na tą piosenkę!</h3>
+    {% endif %}
+    {{data}}
 </div>
 {% endblock %}
 
@@ -45,8 +49,22 @@
             <tr>
                 <td>{{song.artist}}</td>
                 <td>{{song.song_name}}</td>
-                <td><button type="submit" class="btn btn-success">{{song.score_plus}}</button></td>
-                <td><button type="submit" class="btn btn-danger">{{song.score_minus}}</button> </td>
+                <td>
+                    <form method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="song_id" value="{{song.id}}">
+                        <input type="hidden" name="vote" value="plus">
+                        <button type="submit" class="btn btn-success">{{song.score_plus}}</button>
+                    </form>
+                </td>
+                <td>
+                <form method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="song_id" value="{{song.id}}">
+                    <input type="hidden" name="vote" value="minus">
+                    <button type="submit" class="btn btn-danger">{{song.score_minus}}</button>
+                </form>
+                </td>
                 <td>{{song.score}}</td>
                 <td>{{song.song_type}}</td>
                 <td>
