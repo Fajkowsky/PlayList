@@ -33,7 +33,7 @@ class SongForm(ModelForm):
 
     class Meta:
         model = Song
-        fields = ['artist', 'song_name', 'song_type', 'code']
+        fields = ['artist', 'song_name', 'song_type']
         widgets = {
             'artist': forms.TextInput(attrs={'id': 'artist', 'type': 'text', 'class': 'form-control', 'placeholder': 'wykonawca'}),
             'song_name': forms.TextInput(attrs={'id': 'songname', 'type': 'text', 'class': 'form-control', 'placeholder': 'tytuł piosenki'}),

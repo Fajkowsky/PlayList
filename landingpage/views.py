@@ -11,6 +11,8 @@ import json
 from forms import LoginForm, RegisterForm, SongForm
 from models import Song, SongVoted
 
+from songapi import get_song_link
+
 
 def index(request):
     if request.method == 'POST':
@@ -65,24 +67,31 @@ def addsong(request):
             response_data = {}
             if form['artist'] and form['song_name']:
                 response_data = serializers.serialize("json", Song.objects.filter(artist__contains=form['artist'], song_name__contains=form['song_name']))
+
             elif form['artist']:
                 response_data = serializers.serialize("json", Song.objects.filter(artist__contains=form['artist']))
+
             elif form['song_name']:
                 response_data = serializers.serialize("json", Song.objects.filter(song_name__contains=form['song_name']))
+
             return HttpResponse(json.dumps(response_data), content_type="application/json")
+
         elif request.method == 'POST':
             if u'vote' in request.POST.dict():
                 form = request.POST.dict()
                 votesong(request.user.id, int(form['song_id']))
                 return redirect('frontpage')
+
             else:
                 form = SongForm(request.POST)
                 if form.is_valid():
                     song = form.save(commit=False)
                     song.user = request.user
+                    song.code = get_song_link(song.artist, song.song_name)
                     song.save()
                     SongVoted(user=request.user, song=song).save()
                     return redirect('frontpage')
+
         else:
             form = SongForm()
         return render(request, "addsong.html", {'form': form})

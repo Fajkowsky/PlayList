@@ -89,3 +89,5 @@ TEMPLATE_DIRS = (
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static/'),
 )
+
+TINYSONG_KEY = 'd81b3976503e413e6ef1cfb55004e0f6'
