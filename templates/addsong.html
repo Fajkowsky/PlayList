@@ -32,7 +32,7 @@
 
 {% block content %}
 <div class="row col-md-6 col-md-offset-3"> 
-  <form role="form" method="post">
+  <form role="form" method="post" id="myform">
     {% csrf_token %}
     <div class="form-group">
       <label for="artist">Wykonawca</label>
@@ -46,8 +46,63 @@
       {{form.song_type}}
     </div>
     <div class="btn-group">
+      {{form.code}}
+    </div>
+    <div class="btn-group">
       <button type="submit" class="btn btn-success">Dodaj do listy</button>
     </div>
   </form>
 </div>
+<div  class="row col-md-6 col-md-offset-3"> 
+<table id="proposed" class="table table-hover ">
+<thead>
+<tr>
+<th>Wykonawca</th>
+<th>Tytuł</th>
+<th>Głosuj</th>
+</tr>
+</thead>
+    <tbody id="result">
+
+    </tbody>
+</table>
+</div>
+{% endblock %}
+
+{% block script%}
+<script type="text/javascript">
+$(document).ready(function() {
+      $("#proposed").hide();
+      $("#artist").change("#artist",function(event){
+            var res = '';
+            $.ajax({
+                url:"/addsong/",
+                type : "POST",
+                dataType: 'json',
+                data : {
+                  artist: $("#artist").val(),
+                  song_name : $("#songname").val(), 
+                  csrfmiddlewaretoken: '{{ csrf_token }}',
+                },
+                success : function(json) {
+                  var songs = jQuery.parseJSON( json );
+                  $.each(songs, function(index, value) {
+                    console.log(value)
+                    res += "<tr><td>" + value['fields']['artist'] + "</td><td>" + value['fields']['song_name'] + "</td><td><form method='post'>{% csrf_token %}<input type='hidden' name='vote' value='plus'><input type='hidden' name='song_id' value='" + value['pk'] + "'><button type='submit' class='btn btn-success'>" + value['fields']['score_plus']+ "</button></form></td></tr>"
+                  });
+                  $("#proposed").show();
+                  $("#result").html(res);
+                },
+                complete : function(json) {
+                  $("#result").html(res);
+                },
+                error : function(xhr,errmsg,err) {
+                  alert(xhr.status + ": " + xhr.responseText);
+                }
+              });
+            return false; //<---- move it here
+       });
+
+});
+</script>
 {% endblock %}

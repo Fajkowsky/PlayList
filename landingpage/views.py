@@ -3,7 +3,10 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.forms.util import ErrorList
-from django.db.models import F
+from django.db.models import F, Q
+from django.http import HttpResponse
+from django.core import serializers
+import json
 
 from forms import LoginForm, RegisterForm, SongForm
 from models import Song, SongVoted
@@ -45,11 +48,11 @@ def logouting(request):
 
 def frontpage(request, data={'voted': True}):
     if request.user.is_authenticated():
+        data['voted'] = 1
         if request.method == 'POST':
             form = request.POST.dict()
-            data['voted'] = votesong(request.user.id,
-                                     form['song_id'], form['vote'])
-        data['songs'] = Song.objects.all()
+            data['voted'] = votesong(request.user.id, form['song_id'], form['vote'])
+        data['songs'] = Song.objects.all().order_by('-score_plus')
         return render(request, "frontpage.html", data)
     else:
         return redirect('index')
@@ -57,13 +60,29 @@ def frontpage(request, data={'voted': True}):
 
 def addsong(request):
     if request.user.is_authenticated():
-        if request.method == 'POST':
-            form = SongForm(request.POST)
-            if form.is_valid():
-                song = form.save(commit=False)
-                song.user = request.user
-                song.save()
+        if request.is_ajax():
+            form = request.POST.dict()
+            response_data = {}
+            if form['artist'] and form['song_name']:
+                response_data = serializers.serialize("json", Song.objects.filter(artist__contains=form['artist'], song_name__contains=form['song_name']))
+            elif form['artist']:
+                response_data = serializers.serialize("json", Song.objects.filter(artist__contains=form['artist']))
+            elif form['song_name']:
+                response_data = serializers.serialize("json", Song.objects.filter(song_name__contains=form['song_name']))
+            return HttpResponse(json.dumps(response_data), content_type="application/json")
+        elif request.method == 'POST':
+            if u'vote' in request.POST.dict():
+                form = request.POST.dict()
+                votesong(request.user.id, int(form['song_id']))
                 return redirect('frontpage')
+            else:
+                form = SongForm(request.POST)
+                if form.is_valid():
+                    song = form.save(commit=False)
+                    song.user = request.user
+                    song.save()
+                    SongVoted(user=request.user, song=song).save()
+                    return redirect('frontpage')
         else:
             form = SongForm()
         return render(request, "addsong.html", {'form': form})
@@ -74,7 +93,7 @@ def mysong(request):
         return render(request, "mysong.html", {'songs': Song.objects.filter(user=request.user)})
 
 
-def votesong(user_id, song_id, vote):
+def votesong(user_id, song_id, vote='plus'):
     song = Song.objects.get(id=song_id)
     user = User.objects.get(id=user_id)
     if not SongVoted.objects.filter(user=user, song=song):

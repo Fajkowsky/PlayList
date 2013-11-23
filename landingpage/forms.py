@@ -16,12 +16,10 @@ class RegisterForm(ModelForm):
 
     class Meta:
         model = User
-        fields = ['username', 'password', 'email', 'first_name']
+        fields = ['username', 'password']
         widgets = {
             'username': forms.TextInput(attrs={'id': 'login', 'type': 'text', 'class': 'form-control', 'placeholder': 'nazwa użytkownika'}),
-            'first_name': forms.TextInput(attrs={'id': 'name', 'type': 'text', 'class': 'form-control', 'placeholder': 'imię'}),
             'password': forms.TextInput(attrs={'id': 'password', 'type': 'password', 'class': 'form-control', 'placeholder': 'hasło'}),
-            'email': forms.TextInput(attrs={'id': 'email', 'type': 'email', 'class': 'form-control', 'placeholder': 'email'}),
         }
 
     def save(self, commit=True):
@@ -35,8 +33,9 @@ class SongForm(ModelForm):
 
     class Meta:
         model = Song
-        fields = ['artist', 'song_name', 'song_type']
+        fields = ['artist', 'song_name', 'song_type', 'code']
         widgets = {
             'artist': forms.TextInput(attrs={'id': 'artist', 'type': 'text', 'class': 'form-control', 'placeholder': 'wykonawca'}),
             'song_name': forms.TextInput(attrs={'id': 'songname', 'type': 'text', 'class': 'form-control', 'placeholder': 'tytuł piosenki'}),
+            'code': forms.TextInput(attrs={'id': 'code', 'type': 'url', 'class': 'form-control', 'placeholder': 'link do piosenki'}),
         }
