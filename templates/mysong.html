@@ -52,10 +52,7 @@
                 <td>{{song.score}}</td>
                 <td>{{song.song_type}}</td>
                 <td>
-                    <audio controls>
-                        <source src="#" type="audio/mpeg">
-                        Your browser does not support the audio element.
-                    </audio>
+                    <a href="{{song.code}}">Link do piosenki</a>
                 </td>
             </tr>
             {% endfor %}
