@@ -3,7 +3,7 @@ from models import Song, SongVoted
 
 
 class SongAdmin(admin.ModelAdmin):
-    list_display = ('user', 'artist', 'song_name', 'score_plus', 'score_minus')
+    list_display = ('user', 'artist', 'song_name', 'score_plus', 'score_minus', 'problem')
 
 
 class SongVotedAdmin(admin.ModelAdmin):

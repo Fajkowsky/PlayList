@@ -17,6 +17,7 @@ class Song(models.Model):
     score_minus = models.IntegerField(default=0)
     song_type = models.CharField(max_length=10, choices=SONG_SPEED)
     code = models.CharField(max_length=200)
+    problem = models.BooleanField(default=False)
 
     def score(self):
         return self.score_plus - self.score_minus

@@ -41,6 +41,7 @@
             <th>Bilans</th>
             <th>Rodzaj</th>
             <th>Play</th>
+            <th>Nie ta piosenka?</th>
         </thead>
         <tbody>
             {% for song in songs %}
@@ -53,6 +54,19 @@
                 <td>{{song.song_type}}</td>
                 <td>
                     <object width="250" height="40" classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000"><param name="movie" value="http://grooveshark.com/songWidget.swf" /><param name="wmode" value="window" /><param name="allowScriptAccess" value="always" /><param name="flashvars" value="hostname=grooveshark.com&songID={{song.code}}&style=metal&p=0" /><object type="application/x-shockwave-flash" data="http://grooveshark.com/songWidget.swf" width="250" height="40"><param name="wmode" value="window" /><param name="allowScriptAccess" value="always" /><param name="flashvars" value="hostname=grooveshark.com&songID={{song.code}}&style=metal&p=0" /></object></object>
+                </td>
+                <td>
+                    <form method='post'>{% csrf_token %}
+                        <input type='hidden' name='notthissong' value='plus'>
+                        <input type='hidden' name='song_id' value={{song.id}}>
+                        <button type='submit' class='btn btn-success'>
+                        {% if not song.problem %}
+                        Tak, zgłaszam.
+                        {% else %}
+                        Zgłoszono
+                        {% endif %}
+                        </button>
+                    </form>
                 </td>
             </tr>
             {% endfor %}

@@ -53,7 +53,8 @@ def frontpage(request, data={'voted': True}):
         data['voted'] = 1
         if request.method == 'POST':
             form = request.POST.dict()
-            data['voted'] = votesong(request.user.id, form['song_id'], form['vote'])
+            data['voted'] = votesong(request.user.id,
+                                     form['song_id'], form['vote'])
         data['songs'] = Song.objects.all().order_by('-score_plus')
         return render(request, "frontpage.html", data)
     else:
@@ -66,13 +67,16 @@ def addsong(request):
             form = request.POST.dict()
             response_data = {}
             if form['artist'] and form['song_name']:
-                response_data = serializers.serialize("json", Song.objects.filter(artist__contains=form['artist'], song_name__contains=form['song_name']))
+                response_data = serializers.serialize("json", Song.objects.filter(
+                    artist__contains=form['artist'], song_name__contains=form['song_name']))
 
             elif form['artist']:
-                response_data = serializers.serialize("json", Song.objects.filter(artist__contains=form['artist']))
+                response_data = serializers.serialize(
+                    "json", Song.objects.filter(artist__contains=form['artist']))
 
             elif form['song_name']:
-                response_data = serializers.serialize("json", Song.objects.filter(song_name__contains=form['song_name']))
+                response_data = serializers.serialize(
+                    "json", Song.objects.filter(song_name__contains=form['song_name']))
 
             return HttpResponse(json.dumps(response_data), content_type="application/json")
 
@@ -99,6 +103,11 @@ def addsong(request):
 
 def mysong(request):
     if request.user.is_authenticated():
+        if request.method == 'POST':
+            if u'notthissong' in request.POST.dict():
+                form = request.POST.dict()
+                Song.objects.filter(id=int(
+                    form['song_id'])).update(problem=True)
         return render(request, "mysong.html", {'songs': Song.objects.filter(user=request.user)})
 
 
