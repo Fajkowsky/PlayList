@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 
 install_requires = [
     'Django==1.6.0',
-    'dj-database-url==0.2.2'.
+    'dj-database-url==0.2.2',
 	'dj-static==0.0.5',
 	'gunicorn==18.0',
 	'static==0.4',
