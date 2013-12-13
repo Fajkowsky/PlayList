@@ -57,7 +57,7 @@ def frontpage(request, data={'voted': True}):
             data['voted'] = votesong(request.user.id, form['song_id'], form['vote'])
 
         page = request.GET.get('page')
-        paginator = Paginator(Song.objects.all().order_by('-score_plus'), 2)
+        paginator = Paginator(Song.objects.all().order_by('-score_plus'), 10)
         try:
             data['songs'] = paginator.page(page)
         except PageNotAnInteger:
