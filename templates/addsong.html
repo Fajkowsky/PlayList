@@ -87,7 +87,6 @@ $(document).ready(function() {
                 success : function(json) {
                   var songs = jQuery.parseJSON( json );
                   $.each(songs, function(index, value) {
-                    console.log(value)
                     res += "<tr><td>" + value['fields']['artist'] + "</td><td>" + value['fields']['song_name'] + "</td><td><form method='post'>{% csrf_token %}<input type='hidden' name='vote' value='plus'><input type='hidden' name='song_id' value='" + value['pk'] + "'><button type='submit' class='btn btn-success'>" + value['fields']['score_plus']+ "</button></form></td></tr>"
                   });
                   $("#proposed").show();

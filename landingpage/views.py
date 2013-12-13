@@ -80,7 +80,7 @@ def addsong(request):
             if u'vote' in request.POST.dict():
                 form = request.POST.dict()
                 votesong(request.user.id, int(form['song_id']))
-                return redirect('frontpage')
+                return redirect('mysong')
 
             else:
                 form = SongForm(request.POST)
@@ -90,7 +90,7 @@ def addsong(request):
                     song.code = get_song_link(song.artist, song.song_name)
                     song.save()
                     SongVoted(user=request.user, song=song).save()
-                    return redirect('frontpage')
+                    return redirect('mysong')
 
         else:
             form = SongForm()
