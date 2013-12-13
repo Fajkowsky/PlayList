@@ -49,13 +49,22 @@ def logouting(request):
 
 
 def frontpage(request, data={'voted': True}):
+    from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
     if request.user.is_authenticated():
         data['voted'] = 1
         if request.method == 'POST':
             form = request.POST.dict()
-            data['voted'] = votesong(request.user.id,
-                                     form['song_id'], form['vote'])
-        data['songs'] = Song.objects.all().order_by('-score_plus')
+            data['voted'] = votesong(request.user.id, form['song_id'], form['vote'])
+
+        page = request.GET.get('page')
+        paginator = Paginator(Song.objects.all().order_by('-score_plus'), 2)
+        try:
+            data['songs'] = paginator.page(page)
+        except PageNotAnInteger:
+            data['songs'] = paginator.page(1)
+        except EmptyPage:
+            data['songs'] = paginator.page(paginator.num_pages)
+
         return render(request, "frontpage.html", data)
     else:
         return redirect('index')
