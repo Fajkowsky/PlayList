@@ -34,7 +34,7 @@
 
 {% block content %}
 <div class="col-md-12">
-    <p>Aktualnie jest {{count}} piosenek</p>
+    <p>Aktualnie jest {{count}} piosenek.</p>
     <table class="table table-hover ">
         <thead>
             <th>Wykonawca</th>
@@ -46,7 +46,7 @@
             <th>Play</th>
         </thead>
         <tbody>
-            {% for song in songs%}
+            {% for song in songs %}
             <tr>
                 <td>{{song.artist}}</td>
                 <td>{{song.song_name}}</td>
@@ -55,7 +55,7 @@
                         {% csrf_token %}
                         <input type="hidden" name="song_id" value="{{song.id}}">
                         <input type="hidden" name="vote" value="plus">
-                        <button type="submit" class="btn btn-success">{{song.score_plus}}</button>
+                        <button type="submit" class="btn btn-success" {% if song in votes %}disabled{% endif %}>{{song.score_plus}}</button>
                     </form>
                 </td>
                 <td>
@@ -63,7 +63,7 @@
                     {% csrf_token %}
                     <input type="hidden" name="song_id" value="{{song.id}}">
                     <input type="hidden" name="vote" value="minus">
-                    <button type="submit" class="btn btn-danger">{{song.score_minus}}</button>
+                    <button type="submit" class="btn btn-danger" {% if song in votes %}disabled{% endif %}>{{song.score_minus}}</button>
                 </form>
                 </td>
                 <td>{{song.score}}</td>
