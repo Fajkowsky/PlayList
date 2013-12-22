@@ -37,6 +37,9 @@ def register(request):
         form = RegisterForm(request.POST)
         if form.is_valid():
             form.save()
+            cd = form.cleaned_data
+            new_user = authenticate(username=cd['username'], password=cd['password'])
+            login(request, new_user)
             return redirect('index')
     else:
         form = RegisterForm()
