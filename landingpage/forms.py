@@ -9,22 +9,17 @@ class LoginForm(forms.Form):
     username = forms.CharField(required=True, widget=forms.TextInput(
         attrs={'class': 'form-control', 'placeholder': 'nazwa użytkownika'}))
     password = forms.CharField(required=True, widget=forms.TextInput(
-        attrs={'class': 'form-control', 'placeholder': 'hasło', 'type': 'password',}))
+        attrs={'class': 'form-control', 'placeholder': 'hasło', 'type': 'password', }))
 
 
 class RegisterForm(ModelForm):
-
-    messages = {
-        'required': u'To pole jest wymagane.',
-        'invalid': u'To pole jest niepoprawne.'
-    }
 
     class Meta:
         model = User
         fields = ['username', 'password']
         widgets = {
-            'username': forms.TextInput(attrs={'id': 'login', 'type': 'text', 'class': 'form-control', 'placeholder': 'nazwa użytkownika'}, error_messages=messages),
-            'password': forms.TextInput(attrs={'id': 'password', 'type': 'password', 'class': 'form-control', 'placeholder': 'hasło'}, error_messages=messages),
+            'username': forms.TextInput(attrs={'id': 'login', 'type': 'text', 'class': 'form-control', 'placeholder': 'nazwa użytkownika'}),
+            'password': forms.TextInput(attrs={'id': 'password', 'type': 'password', 'class': 'form-control', 'placeholder': 'hasło'}),
         }
 
     def save(self, commit=True):
