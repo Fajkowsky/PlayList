@@ -22,7 +22,7 @@ SECRET_KEY = 'ioa283(aa$t7uy0__d3d3tp@he0=oupl9kyhv=his15y#7*f+!'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-TEMPLATE_DEBUG = False
+TEMPLATE_DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 

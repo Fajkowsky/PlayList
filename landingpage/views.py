@@ -38,7 +38,8 @@ def register(request):
         if form.is_valid():
             form.save()
             cd = form.cleaned_data
-            new_user = authenticate(username=cd['username'], password=cd['password'])
+            new_user = authenticate(
+                username=cd['username'], password=cd['password'])
             login(request, new_user)
             return redirect('index')
     else:
@@ -57,11 +58,13 @@ def frontpage(request, data={'voted': True}):
         data['voted'] = 1
         if request.method == 'POST':
             form = request.POST.dict()
-            data['voted'] = votesong(request.user.id, form['song_id'], form['vote'])
+            data['voted'] = votesong(request.user.id,
+                                     form['song_id'], form['vote'])
 
         page = request.GET.get('page')
         paginator = Paginator(Song.objects.all().order_by('-score_plus'), 10)
-        data['votes'] = SongVoted.objects.filter(user=request.user).values_list('song', flat=True)
+        data['votes'] = SongVoted.objects.filter(
+            user=request.user).values_list('song', flat=True)
         data['count'] = Song.objects.count()
         try:
             data['songs'] = paginator.page(page)
@@ -113,6 +116,8 @@ def addsong(request):
         else:
             form = SongForm()
         return render(request, "addsong.html", {'form': form})
+    else:
+        return redirect('index')
 
 
 def mysong(request):
@@ -123,6 +128,8 @@ def mysong(request):
                 Song.objects.filter(id=int(
                     form['song_id'])).update(problem=True)
         return render(request, "mysong.html", {'songs': Song.objects.filter(user=request.user)})
+    else:
+        return redirect('index')
 
 
 def votesong(user_id, song_id, vote='plus'):
