@@ -24,7 +24,7 @@ DEBUG = True
 
 TEMPLATE_DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -36,6 +36,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'landingpage',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -80,3 +81,16 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
 
 STATIC_URL = '/static/'
+
+TEMPLATE_DIRS = (
+    os.path.join(BASE_DIR, 'templates/'),
+)
+
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'static/'),
+)
+
+TINYSONG_KEY = 'd81b3976503e413e6ef1cfb55004e0f6'
+
+import dj_database_url
+DATABASES['default'] = dj_database_url.config(default=os.environ.get('DATABASE_URL'))

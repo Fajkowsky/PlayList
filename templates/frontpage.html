@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+
+{% block menu %} 
+<div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="{% url 'index' %}">Play Lista </a>
+        </div>
+        <div class="navbar-collapse collapse">
+          <div class="navbar-form navbar-right">
+            <a href="{% url 'mysong' %}"><button type="submit" class="btn btn-primary">Twoje piosenki</button></a>
+            <a href="{% url 'addsong' %}"><button type="submit" class="btn btn-primary">Dodaj piosenkę</button></a>
+            <a href="{% url 'logouting' %}"><button type="submit" class="btn btn-danger">Wyloguj</button></a>
+          </div>
+        </div><!--/.navbar-collapse -->
+      </div>
+    </div>
+{% endblock %}
+
+{% block jumbotron %} 
+<div class="container text-center">
+    <h3>Poniżej możesz przegladać i głosować na już dodane piosenki !</h3>
+    {% if not voted %}
+    <h3>Zagłosowano już na tą piosenkę lub ją dodano z tego konta!</h3>
+    {% endif %}
+    {{data}}
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="col-md-12">
+    <p>Aktualnie jest {{count}} piosenek.</p>
+    <table class="table table-hover ">
+        <thead>
+            <th>Wykonawca</th>
+            <th>Tytuł</th>
+            <th>Plusy</th>
+            <th>Minusy</th>
+            <th>Bilans</th>
+            <th>Rodzaj</th>
+            <th>Play</th>
+        </thead>
+        <tbody>
+            {% for song in songs %}
+            <tr>
+                <td>{{song.artist}}</td>
+                <td>{{song.song_name}}</td>
+                <td>
+                    <form method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="song_id" value="{{song.id}}">
+                        <input type="hidden" name="vote" value="plus">
+                        <button type="submit" class="btn btn-success" {% if song.id in votes %}disabled{% endif %}>{{song.score_plus}}</button>
+                    </form>
+                </td>
+                <td>
+                <form method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="song_id" value="{{song.id}}">
+                    <input type="hidden" name="vote" value="minus">
+                    <button type="submit" class="btn btn-danger" {% if song.id in votes %}disabled{% endif %}>{{song.score_minus}}</button>
+                </form>
+                </td>
+                <td>{{song.score}}</td>
+                <td>{{song.song_type}}</td>
+                <td>
+                    <object width="250" height="40" classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000"><param name="movie" value="http://grooveshark.com/songWidget.swf" /><param name="wmode" value="window" /><param name="allowScriptAccess" value="always" /><param name="flashvars" value="hostname=grooveshark.com&songID={{song.code}}&style=metal&p=0" /><object type="application/x-shockwave-flash" data="http://grooveshark.com/songWidget.swf" width="250" height="40"><param name="wmode" value="window" /><param name="allowScriptAccess" value="always" /><param name="flashvars" value="hostname=grooveshark.com&songID={{song.code}}&style=metal&p=0" /></object></object>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <div class="pagination">
+    <span class="step-links">
+        {% if songs.has_previous %}
+            <a href="?page={{ songs.previous_page_number }}">POPRZEDNIA</a>
+        {% endif %}
+
+        <span class="current">
+            Strona {{ songs.number }} z {{ songs.paginator.num_pages }}.
+        </span>
+
+        {% if songs.has_next %}
+            <a href="?page={{ songs.next_page_number }}">NASTĘPNA</a>
+        {% endif %}
+    </span>
+</div>
+</div>
+{% endblock %}

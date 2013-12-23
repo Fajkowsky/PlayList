@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+
+{% block menu %} 
+<div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">Play Lista </a>
+        </div>
+        <div class="navbar-collapse collapse">
+          <div class="navbar-form navbar-right">
+            <a href="{% url 'frontpage' %}"><button type="submit" class="btn btn-primary">Wszystkie piosenki</button></a>
+            <a href="{% url 'addsong' %}"><button type="submit" class="btn btn-primary">Dodaj piosenkę</button></a>
+            <a href="{% url 'logouting' %}"><button type="submit" class="btn btn-danger">Wyloguj</button></a>
+          </div>
+        </div><!--/.navbar-collapse -->
+      </div>
+    </div>
+{% endblock %}
+
+{% block jumbotron %} 
+<div class="container text-center">
+  <div class="container text-center">
+    <h3>Poniżej możesz przegladać i na dodane przez siebie piosenki !</h3>
+  </div>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="col-md-12"> 
+    <table class="table table-hover ">
+        <thead>
+            <th>Wykonawca</th>
+            <th>Tytuł</th>
+            <th>Plusy</th>
+            <th>Minusy</th>
+            <th>Bilans</th>
+            <th>Rodzaj</th>
+            <th>Play</th>
+            <th>Nie ta piosenka?</th>
+        </thead>
+        <tbody>
+            {% for song in songs %}
+            <tr>
+                <td>{{song.artist}}</td>
+                <td>{{song.song_name}}</td>
+                <td>{{song.score_plus}}</td>
+                <td>{{song.score_minus}}</td>
+                <td>{{song.score}}</td>
+                <td>{{song.song_type}}</td>
+                <td>
+                    <object width="250" height="40" classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000"><param name="movie" value="http://grooveshark.com/songWidget.swf" /><param name="wmode" value="window" /><param name="allowScriptAccess" value="always" /><param name="flashvars" value="hostname=grooveshark.com&songID={{song.code}}&style=metal&p=0" /><object type="application/x-shockwave-flash" data="http://grooveshark.com/songWidget.swf" width="250" height="40"><param name="wmode" value="window" /><param name="allowScriptAccess" value="always" /><param name="flashvars" value="hostname=grooveshark.com&songID={{song.code}}&style=metal&p=0" /></object></object>
+                </td>
+                <td>
+                    <form method='post'>{% csrf_token %}
+                        <input type='hidden' name='notthissong' value='plus'>
+                        <input type='hidden' name='song_id' value={{song.id}}>
+                        <button type='submit' class='btn btn-success'>
+                        {% if not song.problem %}
+                        Tak, zgłaszam.
+                        {% else %}
+                        Zgłoszono
+                        {% endif %}
+                        </button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
