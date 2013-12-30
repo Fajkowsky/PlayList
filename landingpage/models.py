@@ -23,7 +23,7 @@ class Song(models.Model):
         return self.score_plus - self.score_minus
 
     def __str__(self):
-        return "%s" % self.song_name
+        return self.song_name.encode('utf-8')
 
 
 class SongVoted(models.Model):
