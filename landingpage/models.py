@@ -22,6 +22,9 @@ class Song(models.Model):
     def score(self):
         return self.score_plus - self.score_minus
 
+    def __str__(self):
+        return self.name
+
 
 class SongVoted(models.Model):
     user = models.ForeignKey(User)
