@@ -23,7 +23,7 @@ class Song(models.Model):
         return self.score_plus - self.score_minus
 
     def __str__(self):
-        return self.name
+        return self.song_name
 
 
 class SongVoted(models.Model):
