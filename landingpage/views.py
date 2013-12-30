@@ -62,7 +62,7 @@ def frontpage(request, data={'voted': True}):
                                      form['song_id'], form['vote'])
 
         page = request.GET.get('page')
-        paginator = Paginator(Song.objects.all().order_by('-score_plus'), 10)
+        paginator = Paginator(Song.objects.all().order_by('-score_plus', 'score_minus'), 10)
         data['votes'] = SongVoted.objects.filter(
             user=request.user).values_list('song', flat=True)
         data['count'] = Song.objects.count()
